@@ -5,8 +5,8 @@ module.exports = {
   },
   'extends': [
     'plugin:react/recommended',
-    'google',
     'plugin:react/jsx-runtime',
+    'google',
   ],
   'overrides': [
   ],
