@@ -28,7 +28,28 @@ class Board extends React.Component {
   renderSquare(i) {
     return <Square
       value={this.props.squares[i]}
+      key={i}
       onClick={() => this.props.onClick(i)} />;
+  }
+
+  /**
+   * Rendering square block by col row
+   * @param {*} col column number
+   * @param {*} row row number
+   * @return {Component} return block component
+   */
+  renderSquareBlock(col, row) {
+    const squareBlock = [];
+    let number = 0;
+    for (let index = 0; index < col; index++) {
+      const square = [];
+      for (let index2 = 0; index2 < row; index2++) {
+        square.push(this.renderSquare(number));
+        number++;
+      }
+      squareBlock.push(<div className="board-row" key={index}>{square}</div>);
+    }
+    return squareBlock;
   }
 
   /**
@@ -36,23 +57,10 @@ class Board extends React.Component {
    * @return {component} Main render function
    */
   render() {
+    const squareBlock = this.renderSquareBlock(3, 3);
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        {squareBlock}
       </div>
     );
   }
