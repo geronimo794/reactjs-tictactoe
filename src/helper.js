@@ -23,4 +23,26 @@ function calculateWinner(squares) {
   }
   return null;
 }
-export default calculateWinner;
+
+/**
+ * Get and calculate col and row from clicked index
+ * @param {*} index clicked index
+ * @return {Array} array of colum and row
+ */
+function calculateColRow(index) {
+  let col = 1;
+  let row = 1;
+  if (index > 5) {
+    row = 3;
+    col = index - 6 + 1;
+  } else if (index > 2) {
+    row = 2;
+    col = index - 3 + 1;
+  } else {
+    col = index + 1;
+  }
+
+  return [col, row];
+}
+
+export {calculateWinner, calculateColRow};

@@ -1,13 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Board from './components/board';
-import calculateWinner from './calculateWinner';
+import {calculateWinner, calculateColRow} from './helper';
 import './index.css';
 
 /**
  * Main game class
  */
 class Game extends React.Component {
+  /**
+   * Constructor
+   * @param {*} props parent props
+   */
+  constructor(props) {
+    super(props);
+    this.state = {
+      history: [{
+        squares: Array(9).fill(null),
+        coordinate: [],
+        player: '',
+      }],
+      stepNumber: 0,
+      xIsNext: true,
+    };
+  }
+
   /**
    * Handle click function of the board
    * @param {*} i Index of board
@@ -20,10 +37,14 @@ class Game extends React.Component {
       return;
     }
 
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    const currentPlayer = this.state.xIsNext ? 'X' : 'O';
+    squares[i] = currentPlayer;
+
     this.setState({
       history: history.concat([{
         squares: squares,
+        coordinate: calculateColRow(i),
+        player: currentPlayer,
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
@@ -42,21 +63,6 @@ class Game extends React.Component {
   }
 
   /**
-   * Constructor
-   * @param {*} props parent props
-   */
-  constructor(props) {
-    super(props);
-    this.state = {
-      history: [{
-        squares: Array(9).fill(null),
-      }],
-      stepNumber: 0,
-      xIsNext: true,
-    };
-  }
-
-  /**
    * Render function
    * @return {component} View
    */
@@ -65,13 +71,17 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
-    const moves = history.map((step, move) => {
-      const desc = move ?
-        'Go to move #' + move :
-        'Go to game start';
+    const moves = history.map((step, i) => {
+      let desc = '';
+      if (i) {
+        // eslint-disable-next-line max-len
+        desc = 'Go to move #' + i + ': '+`${step.player} on coordinate ${step.coordinate}`;
+      } else {
+        desc = 'Go to game start';
+      }
       return (
-        <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+        <li key={i}>
+          <button onClick={() => this.jumpTo(i)}>{desc}</button>
         </li>
       );
     });
