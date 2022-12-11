@@ -22,7 +22,9 @@ class Game extends React.Component {
       }],
       stepNumber: 0,
       xIsNext: true,
+      stepOrder: 'asc',
     };
+    this.changeStepOrder = this.changeStepOrder.bind(this);
   }
 
   /**
@@ -61,7 +63,15 @@ class Game extends React.Component {
       xIsNext: (step % 2) === 0,
     });
   }
-
+  /**
+   * Change step order
+   */
+  changeStepOrder() {
+    const newStepOrder = (this.state.stepOrder == 'asc' ? 'desc' : 'asc');
+    this.setState({
+      stepOrder: newStepOrder,
+    });
+  }
   /**
    * Render function
    * @return {component} View
@@ -87,6 +97,10 @@ class Game extends React.Component {
         </li>
       );
     });
+    if (this.state.stepOrder == 'desc') {
+      moves.reverse();
+    }
+
 
     let status;
     if (winner) {
@@ -106,7 +120,14 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <div>
+            Sort:
+            <button
+              onClick={this.changeStepOrder}>
+              {this.state.stepOrder}
+            </button>
+          </div>
+          <ol reversed={this.state.stepOrder == 'desc'}>{moves}</ol>
         </div>
       </div>
     );
