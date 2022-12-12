@@ -26,8 +26,11 @@ class Board extends React.Component {
    * @return {component} Square component
    */
   renderSquare(i) {
+    const winningPosition = this.props.winningPosition;
+    console.log(winningPosition);
     return <Square
       value={this.props.squares[i]}
+      isHighlight={winningPosition.includes(i)}
       key={i}
       onClick={() => this.props.onClick(i)} />;
   }
@@ -67,6 +70,7 @@ class Board extends React.Component {
 }
 Board.propTypes = {
   squares: PropTypes.array,
+  winningPosition: PropTypes.array,
   onClick: PropTypes.func,
 };
 
@@ -77,12 +81,15 @@ Board.propTypes = {
  */
 function Square(props) {
   return (
-    <button className="square" onClick={props.onClick}>
+    <button
+      className={'square ' + (props.isHighlight ? 'active' : '') }
+      onClick={props.onClick}>
       {props.value}
     </button>
   );
 }
 Square.propTypes = {
+  isHighlight: PropTypes.bool,
   value: PropTypes.string,
   onClick: PropTypes.func,
 };

@@ -20,9 +20,11 @@ class Game extends React.Component {
         coordinate: [],
         player: '',
       }],
+      winningPosition: [],
       stepNumber: 0,
       xIsNext: true,
       stepOrder: 'asc',
+      winner: '',
     };
     this.changeStepOrder = this.changeStepOrder.bind(this);
   }
@@ -35,12 +37,14 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+    if (squares[i] || calculateWinner(squares)) {
       return;
     }
-
+    // Recalculate winner after sign new value on square
     const currentPlayer = this.state.xIsNext ? 'X' : 'O';
     squares[i] = currentPlayer;
+    const getWinner = calculateWinner(squares);
+    const winningPosition = (getWinner ? getWinner.position : []);
 
     this.setState({
       history: history.concat([{
@@ -48,6 +52,7 @@ class Game extends React.Component {
         coordinate: calculateColRow(i),
         player: currentPlayer,
       }]),
+      winningPosition: winningPosition,
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
     });
@@ -104,17 +109,17 @@ class Game extends React.Component {
 
     let status;
     if (winner) {
-      status = 'Winner: ' + winner;
+      status = 'Winner: ' + winner.player;
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
-
 
     return (
       <div className="game">
         <div className="game-board">
           <Board
             squares={current.squares}
+            winningPosition={this.state.winningPosition}
             onClick={(i) => this.handleClick(i)}
           />
         </div>

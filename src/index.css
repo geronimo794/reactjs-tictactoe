@@ -32,6 +32,9 @@ ul {
 	text-align: center;
 	width: 34px;
 }
+.square.active{
+  color: tomato;
+}
 
 .square:focus {
 	outline: none;
