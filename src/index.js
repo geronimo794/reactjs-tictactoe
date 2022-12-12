@@ -40,6 +40,7 @@ class Game extends React.Component {
     if (squares[i] || calculateWinner(squares)) {
       return;
     }
+
     // Recalculate winner after sign new value on square
     const currentPlayer = this.state.xIsNext ? 'X' : 'O';
     squares[i] = currentPlayer;
@@ -111,7 +112,11 @@ class Game extends React.Component {
     if (winner) {
       status = 'Winner: ' + winner.player;
     } else {
-      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      if (current.squares.includes(null)) {
+        status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+      } else {
+        status = 'Draw';
+      }
     }
 
     return (
